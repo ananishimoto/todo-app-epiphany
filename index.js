@@ -16,6 +16,7 @@ app.use(bodyParser.json())
 
 const todos = []
 
+// Route to get all the to dos and send a response as a json file
 app.get('/todos', (req, res) => {
 
   req.body.task
@@ -24,6 +25,7 @@ app.get('/todos', (req, res) => {
   })
 })
 
+// Route to create a new to do and send back a json file with the information provided
 app.post('/todos', (req, res) => {
     const newTodo = {
         "id": nanoid(),
@@ -35,12 +37,36 @@ app.post('/todos', (req, res) => {
     res.json(newTodo)
 })
 
+// Route to update a to do from the list. Send back a json file
 app.put('/todos/:id', (req, res) => {
-    res.json({
-        "id": 1, 
-        "task": "Updated task",
-        "completed": true
-    })
+  const { id } = req.params;
+  const {task, completed} = req.body;
+
+  // Find the specific to-do to update
+  const todoToBeUpdated = todos.find(todo => JSON.stringify(todo.id) === JSON.stringify(id))
+  console.log("to do", todoToBeUpdated)
+
+  // Update the information inside specific to-do task
+  const updatedTodo = {
+    "id": todoToBeUpdated.id,
+    "task": task,
+    "completed": completed,
+  }
+
+  // Find the specific to-do to update
+  const updatedTodoArray = todos.map(todo => {
+    if(todo.id === id){
+      return updatedTodo
+    }
+    return todo
+  })
+ 
+    res.json({updatedTodoArray})
+})
+
+// Route to delete a to do from the list. Return just an empty json file with a positive status code
+app.delete('/todos/:id', (req, res) => {
+  res.status(200 ).json({})
 })
 
 // Set the port server is listening the information

@@ -14,7 +14,7 @@ function loggerMiddleware(req, res, next){
 app.use(loggerMiddleware)
 app.use(bodyParser.json())
 
-const todos = []
+let todos = []
 
 // Route to get all the to dos and send a response as a json file
 app.get('/todos', (req, res) => {
@@ -44,7 +44,6 @@ app.put('/todos/:id', (req, res) => {
 
   // Find the specific to-do to update
   const todoToBeUpdated = todos.find(todo => JSON.stringify(todo.id) === JSON.stringify(id))
-  console.log("to do", todoToBeUpdated)
 
   // Update the information inside specific to-do task
   const updatedTodo = {
@@ -54,14 +53,14 @@ app.put('/todos/:id', (req, res) => {
   }
 
   // Find the specific to-do to update
-  const updatedTodoArray = todos.map(todo => {
+  todos = todos.map(todo => {
     if(todo.id === id){
       return updatedTodo
     }
     return todo
   })
  
-    res.json({updatedTodoArray})
+    res.json({updatedTodo})
 })
 
 // Route to delete a to do from the list. Return just an empty json file with a positive status code
